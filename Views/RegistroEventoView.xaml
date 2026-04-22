@@ -245,7 +245,8 @@
                             FontSize="15"
                             FontAttributes="Bold"
                             CornerRadius="18"
-                            HeightRequest="58"/>
+                            HeightRequest="58"
+                            Clicked="OnRegistrarPartidoClicked"/>
                 </Border>
 
             </VerticalStackLayout>

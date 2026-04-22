@@ -21,7 +21,7 @@
 
     <!-- Blanco puro y variantes -->
     <Color x:Key="BlancoPuro">#FFFFFF</Color>
-    <Color x:Key="BlancoSuave">#F1F5F9</Color>
+    <Color x:Key="BlancoSuave">#F1F5F9</Color> 
 
     <!-- Textos -->
     <Color x:Key="TextoPrincipal">#F8FAFC</Color>

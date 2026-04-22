@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+using AppEstadios.Controllers;
+using Microsoft.Extensions.Logging;
 
 namespace AppEstadios
 {
@@ -19,7 +20,15 @@ namespace AppEstadios
     		builder.Logging.AddDebug();
 #endif
 
-            return builder.Build();
+            // Construimos la app primero
+            var app = builder.Build();
+
+            // Inicializamos Supabase de forma asíncrona antes de que la UI arranque.
+            // Usamos Task.Run para no bloquear el hilo principal (no hay await aquí).
+            // Los controladores manejan errores internamente si la conexión falla.
+            Task.Run(async () => await SupabaseService.InicializarAsync());
+
+            return app;
         }
     }
 }
