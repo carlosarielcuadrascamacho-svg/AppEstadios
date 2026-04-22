@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:views="clr-namespace:AppEstadios.Views"
+            x:Class="AppEstadios.MainTabbedPage"
+            BarBackgroundColor="{StaticResource Secundario}"
+            BarTextColor="{StaticResource TextoSecundario}"
+            SelectedTabColor="{StaticResource Primario}"
+            UnselectedTabColor="{StaticResource TextoTerciario}">
+
+    <NavigationPage Title="Registro" IconImageSource="tab_registro.png">
+        <x:Arguments>
+            <views:RegistroEventoView />
+        </x:Arguments>
+    </NavigationPage>
+
+    <NavigationPage Title="Ventas" IconImageSource="tab_ventas.png">
+        <x:Arguments>
+            <views:VentaConsultaView />
+        </x:Arguments>
+    </NavigationPage>
+
+    <NavigationPage Title="Reportes" IconImageSource="tab_reportes.png">
+        <x:Arguments>
+            <views:ReportesView />
+        </x:Arguments>
+    </NavigationPage>
+
+</TabbedPage>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppEstadios.Views.VentaConsultaView"
+             BackgroundColor="{StaticResource Fondo}"
+             Title="Ventas">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <!-- ══════════ HEADER FILTROS ══════════ -->
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" BackgroundColor="{StaticResource Secundario}">
+
+            <!-- Top con degradado -->
+            <BoxView Grid.Row="0" Color="#1E3A5F" Opacity="0.6"
+                     HorizontalOptions="Fill" HeightRequest="4"/>
+
+            <VerticalStackLayout Grid.Row="1" Padding="20,16,20,20" Spacing="12">
+
+                <!-- Título + ícono -->
+                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                    <Border BackgroundColor="#1E3A5F" StrokeShape="RoundRectangle 12"
+                            WidthRequest="42" HeightRequest="42" Stroke="#3B82F6" StrokeThickness="1">
+                        <Label Text="🎟️" FontSize="20"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout VerticalOptions="Center" Spacing="1">
+                        <Label Text="VENTA DE BOLETOS" FontSize="11" FontAttributes="Bold"
+                               TextColor="#3B82F6"/>
+                        <Label Text="Selecciona el evento para operar"
+                               FontSize="12" TextColor="{StaticResource TextoSecundario}"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+
+                <!-- Pickers de filtro -->
+                <Grid ColumnDefinitions="*,10,*" ColumnSpacing="0">
+                    <Border Grid.Column="0" StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
+                            BackgroundColor="{StaticResource Superficie}" Padding="4,0">
+                        <Picker x:Name="pickerEstadioFiltro" Title="🏟 Estadio"
+                                TitleColor="{StaticResource TextoTerciario}"
+                                TextColor="{StaticResource TextoPrincipal}"
+                                BackgroundColor="Transparent"/>
+                    </Border>
+                    <Border Grid.Column="2" StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
+                            BackgroundColor="{StaticResource Superficie}" Padding="4,0">
+                        <Picker x:Name="pickerEventoFiltro" Title="📅 Evento"
+                                TitleColor="{StaticResource TextoTerciario}"
+                                TextColor="{StaticResource TextoPrincipal}"
+                                BackgroundColor="Transparent"/>
+                    </Border>
+                </Grid>
+
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- ══════════ CUERPO PRINCIPAL ══════════ -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20" Spacing="18">
+
+                <!-- ─── ESTADÍSTICAS DEL EVENTO ─── -->
+                <Grid ColumnDefinitions="*,12,*" ColumnSpacing="0">
+
+                    <!-- Card: Boletos disponibles -->
+                    <Border Grid.Column="0" StrokeShape="RoundRectangle 18"
+                            Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
+                            BackgroundColor="{StaticResource Card}" Padding="18,16">
+                        <VerticalStackLayout Spacing="6">
+                            <HorizontalStackLayout Spacing="6">
+                                <Label Text="🎫" FontSize="16"/>
+                                <Label Text="Disponibles" FontSize="12"
+                                       TextColor="{StaticResource TextoSecundario}"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <Label x:Name="lblDisponibles" Text="—"
+                                   FontSize="28" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primario}"/>
+                            <Label Text="boletos" FontSize="11"
+                                   TextColor="{StaticResource TextoTerciario}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Card: Recaudado -->
+                    <Border Grid.Column="2" StrokeShape="RoundRectangle 18"
+                            Stroke="#064E3B" StrokeThickness="1"
+                            BackgroundColor="#0A1F1A" Padding="18,16">
+                        <VerticalStackLayout Spacing="6">
+                            <HorizontalStackLayout Spacing="6">
+                                <Label Text="💰" FontSize="16"/>
+                                <Label Text="Recaudado" FontSize="12"
+                                       TextColor="{StaticResource TextoSecundario}"
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <Label x:Name="lblRecaudado" Text="$0.00"
+                                   FontSize="24" FontAttributes="Bold"
+                                   TextColor="{StaticResource Exito}"/>
+                            <Label Text="total del evento" FontSize="11"
+                                   TextColor="{StaticResource TextoTerciario}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </Grid>
+
+                <!-- ─── SEPARADOR CON TÍTULO ─── -->
+                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="12"
+                      VerticalOptions="Center" Margin="0,4">
+                    <BoxView Grid.Column="0" HeightRequest="1" Color="{StaticResource GrisBorde}"
+                             VerticalOptions="Center"/>
+                    <HorizontalStackLayout Grid.Column="1" Spacing="6">
+                        <Label Text="✏️" FontSize="14"/>
+                        <Label Text="Nueva Venta" FontSize="14" FontAttributes="Bold"
+                               TextColor="{StaticResource TextoPrincipal}"/>
+                    </HorizontalStackLayout>
+                    <BoxView Grid.Column="2" HeightRequest="1" Color="{StaticResource GrisBorde}"
+                             VerticalOptions="Center"/>
+                </Grid>
+
+                <!-- ─── FORMULARIO NUEVA VENTA ─── -->
+                <Border x:Name="borderVenta" StrokeShape="RoundRectangle 20"
+                        Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
+                        BackgroundColor="{StaticResource Card}" Padding="20">
+                    <VerticalStackLayout Spacing="14">
+
+                        <!-- Campo: Nombre -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="👤  Nombre del Cliente" FontSize="13" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextoSecundario}"/>
+                            <Border StrokeShape="RoundRectangle 12"
+                                    Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
+                                    BackgroundColor="{StaticResource Superficie}" Padding="4,0">
+                                <Entry x:Name="txtNombreCliente" Placeholder="Ej. Juan Pérez"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{StaticResource TextoPrincipal}"
+                                       PlaceholderColor="{StaticResource TextoTerciario}"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Campo: Teléfono -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="📱  Teléfono" FontSize="13" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextoSecundario}"/>
+                            <Border StrokeShape="RoundRectangle 12"
+                                    Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
+                                    BackgroundColor="{StaticResource Superficie}" Padding="4,0">
+                                <Entry x:Name="txtTelefono" Placeholder="Ej. 555-1234"
+                                       Keyboard="Telephone"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{StaticResource TextoPrincipal}"
+                                       PlaceholderColor="{StaticResource TextoTerciario}"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Campo: Boletos -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="🎟️  Cantidad de Boletos" FontSize="13" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextoSecundario}"/>
+                            <Border StrokeShape="RoundRectangle 12"
+                                    Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
+                                    BackgroundColor="{StaticResource Superficie}" Padding="4,0">
+                                <Entry x:Name="txtCantBoletos" Placeholder="Ej. 4"
+                                       Keyboard="Numeric"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{StaticResource TextoPrincipal}"
+                                       PlaceholderColor="{StaticResource TextoTerciario}"/>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <BoxView HeightRequest="1" Color="{StaticResource GrisBorde}" Margin="0,4"/>
+
+                        <!-- Botones -->
+                        <Grid ColumnDefinitions="*,12,*" ColumnSpacing="0">
+                            <Border Grid.Column="0" StrokeShape="RoundRectangle 14"
+                                    Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
+                                    BackgroundColor="{StaticResource Superficie}" HeightRequest="50">
+                                <Button Text="CANCELAR"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource TextoSecundario}"
+                                        FontSize="13" FontAttributes="Bold"
+                                        HeightRequest="50"/>
+                            </Border>
+                            <Border Grid.Column="2" StrokeShape="RoundRectangle 14"
+                                    Stroke="#10B981" StrokeThickness="1"
+                                    BackgroundColor="#064E3B" HeightRequest="50">
+                                <Button Text="✔ GUARDAR"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource Exito}"
+                                        FontSize="13" FontAttributes="Bold"
+                                        HeightRequest="50"/>
+                            </Border>
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ─── BOTÓN ELIMINAR (Oculto por defecto) ─── -->
+                <Border x:Name="btnEliminarContainer" StrokeShape="RoundRectangle 16"
+                        Stroke="{StaticResource Peligro}" StrokeThickness="1"
+                        BackgroundColor="{StaticResource PeligroOscuro}"
+                        IsVisible="False" HeightRequest="54" Margin="0,4,0,16">
+                    <Button x:Name="btnEliminar" Text="🗑  ELIMINAR EVENTO"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource Peligro}"
+                            FontSize="14" FontAttributes="Bold" HeightRequest="54"/>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
