@@ -1,5 +1,7 @@
 using AppEstadios.Controllers;
 using Microsoft.Extensions.Logging;
+using Syncfusion.Licensing;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace AppEstadios
 {
@@ -7,9 +9,14 @@ namespace AppEstadios
     {
         public static MauiApp CreateMauiApp()
         {
+            // Registramos la licencia de Syncfusion antes de cualquier control
+            SyncfusionLicenseProvider.RegisterLicense(
+                "Ngo9BigBOggjHTQxAR8/V1JHaF5cWWdCe0x0WmFZfVhgdl9FaVZQQ2YuP1ZhSXxVdkFjW39cc31XQmFVWUZ9XEE=");
+
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .ConfigureSyncfusionCore()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

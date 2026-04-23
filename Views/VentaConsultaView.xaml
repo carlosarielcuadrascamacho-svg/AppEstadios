@@ -266,7 +266,6 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- ─── Botón Eliminar Evento (oculto por defecto) ─── -->
                 <Border x:Name="btnEliminarContainer" StrokeShape="RoundRectangle 16"
                         Stroke="{StaticResource Peligro}" StrokeThickness="1"
                         BackgroundColor="{StaticResource PeligroOscuro}"
