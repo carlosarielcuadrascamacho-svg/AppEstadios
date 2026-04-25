@@ -5,277 +5,177 @@
              BackgroundColor="{StaticResource Fondo}"
              Title="Ventas">
 
-    <Grid RowDefinitions="Auto, *">
+    <Grid RowDefinitions="Auto,*">
 
-        <!-- ══════════ HEADER ══════════ -->
-        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" BackgroundColor="{StaticResource Secundario}">
+        <!-- 🔥 HEADER -->
+        <VerticalStackLayout x:Name="HeaderSection" Padding="24,40,24,20" Spacing="16">
 
-            <BoxView Grid.Row="0" Color="#1E3A5F" Opacity="0.6"
-                     HorizontalOptions="Fill" HeightRequest="4"/>
+            <Label Text="Punto de Venta"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextoPrincipal}"/>
 
-            <VerticalStackLayout Grid.Row="1" Padding="20,16,20,20" Spacing="12">
+            <Border StrokeShape="RoundRectangle 18"
+                    BackgroundColor="{StaticResource Card}"
+                    Padding="14">
+                <Picker x:Name="pickerEvento"
+                        Title="Seleccionar evento"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        TextColor="{StaticResource TextoPrincipal}"
+                        BackgroundColor="Transparent"/>
+            </Border>
 
-                <!-- Título + ícono -->
-                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                    <Border BackgroundColor="#1E3A5F" StrokeShape="RoundRectangle 12"
-                            WidthRequest="42" HeightRequest="42" Stroke="#3B82F6" StrokeThickness="1">
-                        <Label Text="🎟️" FontSize="20"
-                               HorizontalOptions="Center" VerticalOptions="Center"/>
-                    </Border>
-                    <VerticalStackLayout VerticalOptions="Center" Spacing="1">
-                        <Label Text="VENTA DE BOLETOS" FontSize="11" FontAttributes="Bold"
-                               TextColor="#3B82F6"/>
-                        <Label Text="Selecciona el partido para operar"
-                               FontSize="12" TextColor="{StaticResource TextoSecundario}"/>
-                    </VerticalStackLayout>
-                </HorizontalStackLayout>
+            <!-- 📅 INFO -->
+            <Label x:Name="lblFechaEvento"
+                   Text="—"
+                   FontSize="13"
+                   TextColor="{StaticResource TextoSecundario}"
+                   IsVisible="False"/>
 
-                <!-- ── Picker único de eventos (sin fecha dentro) ── -->
-                <Border StrokeShape="RoundRectangle 12"
-                        Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                        BackgroundColor="{StaticResource Superficie}" Padding="4,0">
-                    <Picker x:Name="pickerEvento"
-                            Title="⚽  Seleccionar Partido..."
-                            TitleColor="{StaticResource TextoTerciario}"
-                            TextColor="{StaticResource TextoPrincipal}"
-                            BackgroundColor="Transparent"/>
-                </Border>
+        </VerticalStackLayout>
 
-                <!-- ── Fecha del evento (aparece FUERA del picker al seleccionar) ── -->
-                <Border x:Name="borderFecha"
-                        StrokeShape="RoundRectangle 10"
-                        Stroke="#1E3A5F" StrokeThickness="1"
-                        BackgroundColor="#0D1F3A"
-                        Padding="14,10"
-                        IsVisible="False">
-                    <HorizontalStackLayout Spacing="10">
-                        <Label Text="📅" FontSize="15" VerticalOptions="Center"/>
-                        <Label x:Name="lblFechaEvento"
-                               Text="—"
-                               FontSize="13" FontAttributes="Bold"
-                               TextColor="{StaticResource TextoPrincipal}"
-                               VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
-                </Border>
-
-            </VerticalStackLayout>
-        </Grid>
-
-        <!-- ══════════ CUERPO PRINCIPAL ══════════ -->
+        <!-- 🔥 CONTENIDO -->
         <ScrollView Grid.Row="1">
-            <VerticalStackLayout Padding="20" Spacing="16">
+            <VerticalStackLayout Padding="24,10,24,40" Spacing="28">
 
-                <!-- ─── KPIs 2×2 ─── -->
-                <Grid ColumnDefinitions="*,12,*"
-                      RowDefinitions="Auto,12,Auto"
-                      ColumnSpacing="0" RowSpacing="0">
+                <!-- 📊 DASHBOARD -->
+                <Grid x:Name="DashboardSection" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
 
-                    <!-- Card 1: Total de Boletos -->
-                    <Border Grid.Row="0" Grid.Column="0"
-                            StrokeShape="RoundRectangle 18"
-                            Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                            BackgroundColor="{StaticResource Card}" Padding="16,14">
-                        <VerticalStackLayout Spacing="4">
-                            <HorizontalStackLayout Spacing="6">
-                                <Label Text="🎫" FontSize="14"/>
-                                <Label Text="Total Boletos" FontSize="11"
-                                       TextColor="{StaticResource TextoSecundario}"
-                                       VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                            <Label x:Name="lblTotalBoletos" Text="—"
-                                   FontSize="26" FontAttributes="Bold"
-                                   TextColor="{StaticResource Primario}"/>
-                            <Label Text="capacidad total" FontSize="10"
-                                   TextColor="{StaticResource TextoTerciario}"/>
+                    <Border BackgroundColor="{StaticResource Card}" Padding="18" StrokeShape="RoundRectangle 18">
+                        <VerticalStackLayout>
+                            <Label Text="Boletos"
+                                   FontSize="11"
+                                   TextColor="{StaticResource TextoSecundario}"/>
+                            <Label x:Name="lblTotalBoletos"
+                                   FontSize="26"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource TextoPrincipal}"/>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Card 2: Total Recaudado -->
-                    <Border Grid.Row="0" Grid.Column="2"
-                            StrokeShape="RoundRectangle 18"
-                            Stroke="#064E3B" StrokeThickness="1"
-                            BackgroundColor="#0A1F1A" Padding="16,14">
-                        <VerticalStackLayout Spacing="4">
-                            <HorizontalStackLayout Spacing="6">
-                                <Label Text="💰" FontSize="14"/>
-                                <Label Text="Recaudado" FontSize="11"
-                                       TextColor="{StaticResource TextoSecundario}"
-                                       VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                            <Label x:Name="lblRecaudado" Text="$0.00"
-                                   FontSize="22" FontAttributes="Bold"
+                    <Border Grid.Column="1" BackgroundColor="{StaticResource Card}" Padding="18" StrokeShape="RoundRectangle 18">
+                        <VerticalStackLayout>
+                            <Label Text="Recaudado"
+                                   FontSize="11"
+                                   TextColor="{StaticResource TextoSecundario}"/>
+                            <Label x:Name="lblRecaudado"
+                                   FontSize="26"
+                                   FontAttributes="Bold"
                                    TextColor="{StaticResource Exito}"/>
-                            <Label Text="total del evento" FontSize="10"
-                                   TextColor="{StaticResource TextoTerciario}"/>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Card 3: Boletos Disponibles -->
-                    <Border Grid.Row="2" Grid.Column="0"
-                            StrokeShape="RoundRectangle 18"
-                            Stroke="#2D1B69" StrokeThickness="1"
-                            BackgroundColor="#180F3A" Padding="16,14">
-                        <VerticalStackLayout Spacing="4">
-                            <HorizontalStackLayout Spacing="6">
-                                <Label Text="✅" FontSize="14"/>
-                                <Label Text="Disponibles" FontSize="11"
-                                       TextColor="{StaticResource TextoSecundario}"
-                                       VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                            <Label x:Name="lblDisponibles" Text="—"
-                                   FontSize="26" FontAttributes="Bold"
-                                   TextColor="{StaticResource Acento}"/>
-                            <Label Text="boletos libres" FontSize="10"
-                                   TextColor="{StaticResource TextoTerciario}"/>
+                    <Border Grid.Row="1" BackgroundColor="{StaticResource Card}" Padding="18" StrokeShape="RoundRectangle 18">
+                        <VerticalStackLayout>
+                            <Label Text="Disponibles"
+                                   FontSize="11"
+                                   TextColor="{StaticResource TextoSecundario}"/>
+                            <Label x:Name="lblDisponibles"
+                                   FontSize="26"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource BlancoPuro}"/>
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Card 4: Precio por Boleto -->
-                    <Border Grid.Row="2" Grid.Column="2"
-                            StrokeShape="RoundRectangle 18"
-                            Stroke="#1E3A5F" StrokeThickness="1"
-                            BackgroundColor="#0D1F3A" Padding="16,14">
-                        <VerticalStackLayout Spacing="4">
-                            <HorizontalStackLayout Spacing="6">
-                                <Label Text="🏷️" FontSize="14"/>
-                                <Label Text="Precio Boleto" FontSize="11"
-                                       TextColor="{StaticResource TextoSecundario}"
-                                       VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                            <Label x:Name="lblPrecioBoleto" Text="$0.00"
-                                   FontSize="22" FontAttributes="Bold"
-                                   TextColor="{StaticResource Primario}"/>
-                            <Label Text="por unidad" FontSize="10"
-                                   TextColor="{StaticResource TextoTerciario}"/>
+                    <Border Grid.Row="1" Grid.Column="1" BackgroundColor="{StaticResource Card}" Padding="18" StrokeShape="RoundRectangle 18">
+                        <VerticalStackLayout>
+                            <Label Text="Precio"
+                                   FontSize="11"
+                                   TextColor="{StaticResource TextoSecundario}"/>
+                            <Label x:Name="lblPrecioBoleto"
+                                   FontSize="26"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource BlancoPuro}"/>
                         </VerticalStackLayout>
                     </Border>
 
                 </Grid>
 
-                <!-- ─── Separador ─── -->
-                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="12"
-                      VerticalOptions="Center" Margin="0,4">
-                    <BoxView Grid.Column="0" HeightRequest="1" Color="{StaticResource GrisBorde}"
-                             VerticalOptions="Center"/>
-                    <HorizontalStackLayout Grid.Column="1" Spacing="6">
-                        <Label Text="✏️" FontSize="14"/>
-                        <Label Text="Nueva Venta" FontSize="14" FontAttributes="Bold"
-                               TextColor="{StaticResource TextoPrincipal}"/>
-                    </HorizontalStackLayout>
-                    <BoxView Grid.Column="2" HeightRequest="1" Color="{StaticResource GrisBorde}"
-                             VerticalOptions="Center"/>
+                <!-- 🔥 SEPARADOR -->
+                <Label Text="Nueva Venta"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextoPrincipal}"/>
+
+                <!-- 🧾 FORM -->
+                <VerticalStackLayout x:Name="FormSection" Spacing="18">
+
+                    <Entry x:Name="txtNombreCliente"
+                           Placeholder="Nombre del cliente"
+                           HeightRequest="55"
+                           BackgroundColor="{StaticResource Card}"
+                           TextColor="{StaticResource TextoPrincipal}"
+                           PlaceholderColor="{StaticResource TextoTerciario}"
+                           Margin="0,0,0,0"/>
+
+                    <Entry x:Name="txtTelefono"
+                           Placeholder="Teléfono (opcional)"
+                           Keyboard="Telephone"
+                           HeightRequest="55"
+                           BackgroundColor="{StaticResource Card}"
+                           TextColor="{StaticResource TextoPrincipal}"
+                           PlaceholderColor="{StaticResource TextoTerciario}"/>
+
+                    <Grid ColumnDefinitions="*,12,*">
+
+                        <Entry x:Name="txtCantBoletos"
+                               Placeholder="Cantidad"
+                               Keyboard="Numeric"
+                               HeightRequest="55"
+                               BackgroundColor="{StaticResource Card}"
+                               TextColor="{StaticResource TextoPrincipal}"
+                               TextChanged="OnCantBoletosTextChanged"/>
+
+                        <Border Grid.Column="2"
+                                BackgroundColor="#052E16"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="12"
+                                VerticalOptions="Center">
+
+                            <Label x:Name="lblTotalPagar"
+                                   Text="$0.00"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Exito}"
+                                   HorizontalOptions="Center"/>
+                        </Border>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+
+                <!-- 🔥 BOTONES -->
+                <Grid x:Name="BotonesSection" ColumnDefinitions="*,12,*">
+
+                    <Button Text="Cancelar"
+                            BackgroundColor="{StaticResource Superficie}"
+                            TextColor="{StaticResource TextoPrincipal}"
+                            CornerRadius="14"
+                            HeightRequest="55"
+                            Clicked="OnCancelarClicked"/>
+
+                    <Button x:Name="btnConfirmar"
+                            Grid.Column="2"
+                            Text="Confirmar Venta"
+                            BackgroundColor="{StaticResource BlancoPuro}"
+                            TextColor="{StaticResource Black}"
+                            CornerRadius="14"
+                            HeightRequest="55"
+                            FontAttributes="Bold"
+                            Clicked="OnGuardarVentaClicked"/>
+
                 </Grid>
 
-                <!-- ─── Formulario de venta ─── -->
-                <Border StrokeShape="RoundRectangle 20"
-                        Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                        BackgroundColor="{StaticResource Card}" Padding="20">
-                    <VerticalStackLayout Spacing="14">
-
-                        <!-- Nombre del cliente -->
-                        <VerticalStackLayout Spacing="6">
-                            <Label Text="👤  Nombre del Cliente" FontSize="13" FontAttributes="Bold"
-                                   TextColor="{StaticResource TextoSecundario}"/>
-                            <Border StrokeShape="RoundRectangle 12"
-                                    Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                    BackgroundColor="{StaticResource Superficie}" Padding="4,0">
-                                <Entry x:Name="txtNombreCliente" Placeholder="Ej. Juan Pérez"
-                                       BackgroundColor="Transparent"
-                                       TextColor="{StaticResource TextoPrincipal}"
-                                       PlaceholderColor="{StaticResource TextoTerciario}"/>
-                            </Border>
-                        </VerticalStackLayout>
-
-                        <!-- Teléfono -->
-                        <VerticalStackLayout Spacing="6">
-                            <Label Text="📱  Teléfono (opcional)" FontSize="13" FontAttributes="Bold"
-                                   TextColor="{StaticResource TextoSecundario}"/>
-                            <Border StrokeShape="RoundRectangle 12"
-                                    Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                    BackgroundColor="{StaticResource Superficie}" Padding="4,0">
-                                <Entry x:Name="txtTelefono" Placeholder="Ej. 555-1234"
-                                       Keyboard="Telephone"
-                                       BackgroundColor="Transparent"
-                                       TextColor="{StaticResource TextoPrincipal}"
-                                       PlaceholderColor="{StaticResource TextoTerciario}"/>
-                            </Border>
-                        </VerticalStackLayout>
-
-                        <!-- Cantidad + Total calculado automáticamente -->
-                        <Grid ColumnDefinitions="*,14,*" ColumnSpacing="0">
-
-                            <VerticalStackLayout Grid.Column="0" Spacing="6">
-                                <Label Text="🎟️  Cantidad" FontSize="13" FontAttributes="Bold"
-                                       TextColor="{StaticResource TextoSecundario}"/>
-                                <Border StrokeShape="RoundRectangle 12"
-                                        Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                        BackgroundColor="{StaticResource Superficie}" Padding="4,0">
-                                    <Entry x:Name="txtCantBoletos" Placeholder="0"
-                                           Keyboard="Numeric"
-                                           BackgroundColor="Transparent"
-                                           TextColor="{StaticResource TextoPrincipal}"
-                                           PlaceholderColor="{StaticResource TextoTerciario}"
-                                           TextChanged="OnCantBoletosTextChanged"/>
-                                </Border>
-                            </VerticalStackLayout>
-
-                            <!-- Total a pagar (auto-calculado, solo lectura visual) -->
-                            <VerticalStackLayout Grid.Column="2" Spacing="6">
-                                <Label Text="💵  Total a Pagar" FontSize="13" FontAttributes="Bold"
-                                       TextColor="{StaticResource TextoSecundario}"/>
-                                <Border StrokeShape="RoundRectangle 12"
-                                        Stroke="#064E3B" StrokeThickness="1"
-                                        BackgroundColor="#0A1F1A"
-                                        Padding="16,0" HeightRequest="45">
-                                    <Label x:Name="lblTotalPagar"
-                                           Text="$0.00"
-                                           FontSize="20" FontAttributes="Bold"
-                                           TextColor="{StaticResource Exito}"
-                                           VerticalOptions="Center"/>
-                                </Border>
-                            </VerticalStackLayout>
-
-                        </Grid>
-
-                        <BoxView HeightRequest="1" Color="{StaticResource GrisBorde}" Margin="0,4"/>
-
-                        <!-- Botones Cancelar / Guardar -->
-                        <Grid ColumnDefinitions="*,12,*" ColumnSpacing="0">
-                            <Border Grid.Column="0" StrokeShape="RoundRectangle 14"
-                                    Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                    BackgroundColor="{StaticResource Superficie}" HeightRequest="50">
-                                <Button Text="CANCELAR"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource TextoSecundario}"
-                                        FontSize="13" FontAttributes="Bold"
-                                        HeightRequest="50"
-                                        Clicked="OnCancelarClicked"/>
-                            </Border>
-                            <Border Grid.Column="2" StrokeShape="RoundRectangle 14"
-                                    Stroke="#10B981" StrokeThickness="1"
-                                    BackgroundColor="#064E3B" HeightRequest="50">
-                                <Button Text="✔ GUARDAR"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource Exito}"
-                                        FontSize="13" FontAttributes="Bold"
-                                        HeightRequest="50"
-                                        Clicked="OnGuardarVentaClicked"/>
-                            </Border>
-                        </Grid>
-
-                    </VerticalStackLayout>
-                </Border>
-
-                <Border x:Name="btnEliminarContainer" StrokeShape="RoundRectangle 16"
-                        Stroke="{StaticResource Peligro}" StrokeThickness="1"
-                        BackgroundColor="{StaticResource PeligroOscuro}"
-                        IsVisible="False" HeightRequest="54" Margin="0,4,0,16">
-                    <Button x:Name="btnEliminar" Text="🗑  ELIMINAR EVENTO"
-                            BackgroundColor="Transparent"
-                            TextColor="{StaticResource Peligro}"
-                            FontSize="14" FontAttributes="Bold" HeightRequest="54"
-                            Clicked="OnEliminarEventoClicked"/>
-                </Border>
+                <!-- ⚠️ ELIMINAR -->
+                <Button x:Name="btnEliminarContainer"
+                        Text="Eliminar Evento"
+                        BackgroundColor="#2A0808"
+                        TextColor="{StaticResource Peligro}"
+                        CornerRadius="14"
+                        HeightRequest="50"
+                        IsVisible="False"
+                        Clicked="OnEliminarEventoClicked"/>
 
             </VerticalStackLayout>
         </ScrollView>

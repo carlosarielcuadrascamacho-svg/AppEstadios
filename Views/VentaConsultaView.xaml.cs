@@ -38,6 +38,15 @@ namespace AppEstadios.Views
 
             // Suscribimos el handler del Picker único de eventos
             pickerEvento.SelectedIndexChanged += OnEventoSeleccionado;
+
+            ConfigurarAnimacionesInteractivas();
+        }
+
+        private void ConfigurarAnimacionesInteractivas()
+        {
+            // Efecto Scale en el botón de confirmar (Feedback inmediato)
+            btnConfirmar.Pressed += async (s, e) => await btnConfirmar.ScaleTo(0.95, 100, Easing.SinOut);
+            btnConfirmar.Released += async (s, e) => await btnConfirmar.ScaleTo(1.0, 100, Easing.SinOut);
         }
 
         // ──────────────────────────────────────────────────────────
@@ -47,7 +56,39 @@ namespace AppEstadios.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            // Preparar elementos para animación de entrada
+            DashboardSection.Opacity = 0;
+            DashboardSection.TranslationY = 30;
+            FormSection.Opacity = 0;
+            FormSection.TranslationY = 30;
+            BotonesSection.Opacity = 0;
+            BotonesSection.TranslationY = 30;
+
+            AnimarEntradaAsync();
+
             await CargarEventosAsync();
+        }
+
+        private async void AnimarEntradaAsync()
+        {
+            await Task.Delay(100);
+            _ = Task.WhenAll(
+                DashboardSection.FadeTo(1, 400, Easing.CubicOut),
+                DashboardSection.TranslateTo(0, 0, 400, Easing.CubicOut)
+            );
+
+            await Task.Delay(100);
+            _ = Task.WhenAll(
+                FormSection.FadeTo(1, 400, Easing.CubicOut),
+                FormSection.TranslateTo(0, 0, 400, Easing.CubicOut)
+            );
+
+            await Task.Delay(100);
+            _ = Task.WhenAll(
+                BotonesSection.FadeTo(1, 400, Easing.CubicOut),
+                BotonesSection.TranslateTo(0, 0, 400, Easing.CubicOut)
+            );
         }
 
         // ──────────────────────────────────────────────────────────
@@ -92,7 +133,7 @@ namespace AppEstadios.Views
 
             // ── Mostrar la fecha FUERA del picker ──
             lblFechaEvento.Text     = seleccion.FechaFormateada;
-            borderFecha.IsVisible   = true;
+            lblFechaEvento.IsVisible   = true;
 
             // ── Cargar estadísticas y actualizar los 4 KPIs ──
             _estadisticasActuales = await _controlador.ObtenerEstadisticasAsync(_eventoSeleccionado);
@@ -108,6 +149,17 @@ namespace AppEstadios.Views
         // ──────────────────────────────────────────────────────────
         //  ACTUALIZAR KPIs EN UI
         // ──────────────────────────────────────────────────────────
+
+        private void AnimarContador(Label label, double valorFinal, bool esMoneda)
+        {
+            label.AbortAnimation("Contador");
+            var animacion = new Animation(v =>
+            {
+                label.Text = esMoneda ? $"${v:F2}" : Math.Floor(v).ToString();
+            }, 0, valorFinal, Easing.CubicOut);
+
+            animacion.Commit(label, "Contador", length: 400);
+        }
 
         /// <summary>
         /// Actualiza los 4 cards de KPIs.
@@ -125,9 +177,9 @@ namespace AppEstadios.Views
             }
             else
             {
-                lblTotalBoletos.Text = stats.TotalBoletos.ToString();
-                lblRecaudado.Text    = $"${stats.TotalRecaudado:F2}";
-                lblDisponibles.Text  = stats.BoletosDisponibles.ToString();
+                AnimarContador(lblTotalBoletos, stats.TotalBoletos, false);
+                AnimarContador(lblRecaudado, (double)stats.TotalRecaudado, true);
+                AnimarContador(lblDisponibles, stats.BoletosDisponibles, false);
                 lblPrecioBoleto.Text = $"${stats.PrecioPorBoleto:F2}";
             }
 
@@ -158,6 +210,9 @@ namespace AppEstadios.Views
             {
                 var total = cantidad * _estadisticasActuales.PrecioPorBoleto;
                 lblTotalPagar.Text = $"${total:F2}";
+
+                // Efecto visual leve de feedback
+                _ = lblTotalPagar.ScaleTo(1.1, 100, Easing.CubicOut).ContinueWith(t => lblTotalPagar.ScaleTo(1.0, 100, Easing.CubicOut));
             }
             else
             {
@@ -187,6 +242,14 @@ namespace AppEstadios.Views
 
             if (resultado.Exitoso)
             {
+                // Animación de éxito temporal (Feedback visual)
+                _ = btnConfirmar.ScaleTo(1.05, 100, Easing.CubicOut).ContinueWith(t => btnConfirmar.ScaleTo(1.0, 100, Easing.CubicOut));
+                var colorOriginal = btnConfirmar.BackgroundColor;
+                btnConfirmar.BackgroundColor = Color.FromArgb("#10B981");
+                
+                await Task.Delay(300);
+                btnConfirmar.BackgroundColor = colorOriginal;
+
                 await DisplayAlert("¡Venta Registrada! 🎟️", resultado.Mensaje, "Aceptar");
 
                 // Refrescamos SOLO los KPIs (sin recargar el Picker completo)
@@ -264,7 +327,7 @@ namespace AppEstadios.Views
         /// <summary>Oculta el label de fecha y el botón eliminar.</summary>
         private void OcultarFecha()
         {
-            borderFecha.IsVisible          = false;
+            lblFechaEvento.IsVisible       = false;
             lblFechaEvento.Text            = "—";
             btnEliminarContainer.IsVisible = false;
         }

@@ -54,6 +54,61 @@ namespace AppEstadios.Views
 
             // Instanciamos el controlador (sin parámetros por ahora)
             _controlador = new RegistroEventoController();
+
+            ConfigurarAnimacionesInteractivas();
+        }
+
+        // ──────────────────────────────────────────────────────────
+        //  ANIMACIONES DE INTERACCIÓN
+        // ──────────────────────────────────────────────────────────
+
+        private void ConfigurarAnimacionesInteractivas()
+        {
+            // Efecto Scale en el botón principal
+            btnGuardar.Pressed += async (s, e) => await btnGuardar.ScaleTo(0.95, 100, Easing.SinOut);
+            btnGuardar.Released += async (s, e) => await btnGuardar.ScaleTo(1.0, 100, Easing.SinOut);
+
+            // Efecto visual sutil al hacer focus en inputs
+            var inputs = new View[] { pickerLocal, pickerVisitante, pickerEstadio, fechaEvento, horaEvento, txtTotalBoletos, txtPrecio };
+            
+            foreach (var input in inputs)
+            {
+                input.Focused += async (s, e) => 
+                {
+                    if (s is View v)
+                    {
+                        var border = ObtenerBorderPadre(v);
+                        if (border != null)
+                            await border.ScaleTo(1.02, 150, Easing.CubicOut);
+                        else
+                            await v.ScaleTo(1.02, 150, Easing.CubicOut);
+                    }
+                };
+                
+                input.Unfocused += async (s, e) => 
+                {
+                    if (s is View v)
+                    {
+                        var border = ObtenerBorderPadre(v);
+                        if (border != null)
+                            await border.ScaleTo(1.0, 150, Easing.CubicOut);
+                        else
+                            await v.ScaleTo(1.0, 150, Easing.CubicOut);
+                    }
+                };
+            }
+        }
+
+        private Border ObtenerBorderPadre(Element elemento)
+        {
+            var parent = elemento.Parent;
+            while (parent != null)
+            {
+                if (parent is Border border)
+                    return border;
+                parent = parent.Parent;
+            }
+            return null;
         }
 
         // ──────────────────────────────────────────────────────────
@@ -67,7 +122,52 @@ namespace AppEstadios.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            // Preparar elementos para animación de entrada
+            HeaderSection.Opacity = 0;
+            MatchupSection.Opacity = 0;
+            MatchupSection.TranslationY = 30;
+            DetallesSection.Opacity = 0;
+            DetallesSection.TranslationY = 30;
+            BoletosSection.Opacity = 0;
+            BoletosSection.TranslationY = 30;
+            btnGuardar.Opacity = 0;
+            btnGuardar.TranslationY = 30;
+
+            // Iniciar la animación de entrada
+            AnimarEntradaAsync();
+
             await CargarDatosInicialesAsync();
+        }
+
+        private async void AnimarEntradaAsync()
+        {
+            // Animación de entrada (Staggered)
+            _ = HeaderSection.FadeTo(1, 400, Easing.CubicOut);
+            
+            await Task.Delay(100);
+            _ = Task.WhenAll(
+                MatchupSection.FadeTo(1, 400, Easing.CubicOut),
+                MatchupSection.TranslateTo(0, 0, 400, Easing.CubicOut)
+            );
+
+            await Task.Delay(100);
+            _ = Task.WhenAll(
+                DetallesSection.FadeTo(1, 400, Easing.CubicOut),
+                DetallesSection.TranslateTo(0, 0, 400, Easing.CubicOut)
+            );
+
+            await Task.Delay(100);
+            _ = Task.WhenAll(
+                BoletosSection.FadeTo(1, 400, Easing.CubicOut),
+                BoletosSection.TranslateTo(0, 0, 400, Easing.CubicOut)
+            );
+
+            await Task.Delay(100);
+            _ = Task.WhenAll(
+                btnGuardar.FadeTo(1, 400, Easing.CubicOut),
+                btnGuardar.TranslateTo(0, 0, 400, Easing.CubicOut)
+            );
         }
 
         /// <summary>
@@ -91,9 +191,13 @@ namespace AppEstadios.Views
             _equipos  = tareaEquipos.Result;
             _estadios = tareaEstadios.Result;
 
+            // Agregamos la opción especial de "Nuevo Estadio" al final de la lista
+            _estadios.Add(new Estadio { Id = -1, Nombre = "➕ Agregar nuevo estadio..." });
+
             // ── Asignamos la fuente de datos a los Pickers ──
-            // ItemsSource + ItemDisplayBinding permite que el Picker
-            // muestre el nombre del objeto (vía ToString()) pero guardemos el objeto completo
+            pickerLocal.ItemsSource      = null;
+            pickerVisitante.ItemsSource  = null;
+            pickerEstadio.ItemsSource    = null;
 
             pickerLocal.ItemsSource      = _equipos;
             pickerVisitante.ItemsSource  = _equipos;
@@ -103,8 +207,49 @@ namespace AppEstadios.Views
             if (_equipos.Count == 0)
                 await DisplayAlert("Sin datos", "No se pudieron cargar los equipos. Verifica tu conexión.", "OK");
 
-            if (_estadios.Count == 0)
+            if (_estadios.Count == 1) // 1 porque siempre está el dummy
                 await DisplayAlert("Sin datos", "No se pudieron cargar los estadios. Verifica tu conexión.", "OK");
+        }
+
+        /// <summary>
+        /// Recarga únicamente la lista de estadios y autoselecciona el más reciente.
+        /// </summary>
+        private async Task RecargarEstadiosAsync()
+        {
+            var estadiosActualizados = await _controlador.ObtenerEstadiosAsync();
+            _estadios = estadiosActualizados;
+            _estadios.Add(new Estadio { Id = -1, Nombre = "➕ Agregar nuevo estadio..." });
+
+            pickerEstadio.ItemsSource = null;
+            pickerEstadio.ItemsSource = _estadios;
+
+            // Autoseleccionar el último insertado (el anterior al dummy de "-1")
+            if (_estadios.Count > 1)
+            {
+                pickerEstadio.SelectedIndex = _estadios.Count - 2;
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────
+        //  EVENTOS
+        // ──────────────────────────────────────────────────────────
+
+        private async void OnEstadioSeleccionado(object sender, EventArgs e)
+        {
+            if (pickerEstadio.SelectedItem is Estadio seleccionado && seleccionado.Id == -1)
+            {
+                // Resetear el picker para no dejar seleccionado el dummy
+                pickerEstadio.SelectedIndex = -1;
+
+                var modal = new AgregarEstadioView();
+                modal.Disappearing += async (s, args) =>
+                {
+                    // Al cerrarse el modal, recargamos la lista silenciosamente
+                    await RecargarEstadiosAsync();
+                };
+                
+                await Navigation.PushModalAsync(modal);
+            }
         }
 
         // ──────────────────────────────────────────────────────────

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             x:Class="AppEstadios.Views.AgregarEstadioView"
+             Title="Agregar Estadio"
+             BackgroundColor="#000000">
+    <Grid>
+        <maps:Map x:Name="mapaSeleccion"
+                  HorizontalOptions="Fill"
+                  VerticalOptions="Fill"
+                  MapClicked="OnMapClicked"
+                  IsShowingUser="False">
+        </maps:Map>
+
+        <Grid VerticalOptions="Start" Padding="20,50,20,0" ColumnDefinitions="*, Auto">
+            <Border Grid.Column="1"
+                    BackgroundColor="#80000000" StrokeShape="RoundRectangle 25"
+                    Stroke="#40FFFFFF" StrokeThickness="1"
+                    WidthRequest="50" HeightRequest="50"
+                    Shadow="{Shadow Brush=Black, Offset='0,4', Radius=10, Opacity=0.3}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCancelarClicked"/>
+                </Border.GestureRecognizers>
+                <Label Text="close" FontFamily="MaterialSymbols" FontSize="24" TextColor="#FFFFFF"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Border>
+        </Grid>
+
+        <Border StrokeShape="RoundRectangle 32,32,0,0"
+                Stroke="#20FFFFFF" StrokeThickness="1"
+                BackgroundColor="#121212" VerticalOptions="End"
+                Margin="0" Padding="30,30,30,50"
+                Shadow="{Shadow Brush=Black, Offset='0,-10', Radius=30, Opacity=0.5}">
+
+            <VerticalStackLayout Spacing="25">
+
+                <BoxView HeightRequest="4" WidthRequest="40" 
+                         Color="#33FFFFFF" CornerRadius="2" 
+                         HorizontalOptions="Center" Margin="0,-10,0,10"/>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Nueva Ubicación" FontSize="26" FontAttributes="Bold" TextColor="#FFFFFF"/>
+                    <Label Text="Selecciona el punto exacto en el mapa." FontSize="15" TextColor="#A1A1AA" />
+                </VerticalStackLayout>
+
+                <Border StrokeShape="RoundRectangle 16"
+                        Stroke="#33FFFFFF" StrokeThickness="1"
+                        BackgroundColor="#1C1C1E"
+                        HeightRequest="60"
+                        Padding="20,0">
+                    <Entry x:Name="txtNombreEstadio"
+                           Placeholder="Nombre del Estadio"
+                           PlaceholderColor="#71717A"
+                           TextColor="#FFFFFF"
+                           FontSize="16"
+                           VerticalOptions="Center"
+                           BackgroundColor="Transparent"/>
+                </Border>
+
+                <Button x:Name="btnGuardar"
+                        Text="Confirmar Estadio"
+                        BackgroundColor="#FFFFFF"
+                        TextColor="#000000"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        CornerRadius="16"
+                        HeightRequest="60"
+                        Margin="0,10,0,0"
+                        Clicked="OnGuardarClicked"/>
+            </VerticalStackLayout>
+        </Border>
+
+        <Grid x:Name="overlayLoading" BackgroundColor="#B3000000" IsVisible="False">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="20">
+                <ActivityIndicator IsRunning="{Binding IsVisible, Source={x:Reference overlayLoading}}" 
+                                   Color="#FFFFFF" />
+                <Label Text="Guardando..." TextColor="#FFFFFF" FontSize="14" FontAttributes="Bold"/>
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

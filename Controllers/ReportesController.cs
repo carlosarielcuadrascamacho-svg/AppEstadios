@@ -82,6 +82,7 @@ namespace AppEstadios.Controllers
 
                     pines.Add(new PinEventoInfo
                     {
+                        EventoId        = evento.Id,
                         NombreEstadio   = estadio.Nombre,
                         NombreLocal     = nombreLocal,
                         NombreVisitante = nombreVisitante,
@@ -98,6 +99,54 @@ namespace AppEstadios.Controllers
             {
                 Console.WriteLine($"[ReportesController] Error: {ex.Message}");
                 return new List<PinEventoInfo>();
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════
+        //  ESTADÍSTICAS DEL EVENTO (LAZY LOAD)
+        // ══════════════════════════════════════════════════════════
+
+        /// <summary>
+        /// Obtiene de forma perezosa (lazy) los boletos vendidos y total recaudado
+        /// para un evento específico al tocar su pin.
+        /// </summary>
+        public async Task<EstadisticasEvento> ObtenerEstadisticasAsync(int eventoId)
+        {
+            try
+            {
+                // Obtenemos el evento para conocer el total de boletos y precio
+                var respuestaEvento = await SupabaseService.Cliente
+                    .From<Evento>()
+                    .Filter("id", Operator.Equals, eventoId.ToString())
+                    .Single();
+
+                if (respuestaEvento == null) return new EstadisticasEvento();
+
+                var evento = respuestaEvento;
+
+                // Obtenemos las ventas
+                var respuestaVentas = await SupabaseService.Cliente
+                    .From<Venta>()
+                    .Filter("evento_id", Operator.Equals, eventoId.ToString())
+                    .Get();
+
+                var ventas = respuestaVentas.Models;
+                int totalVendidos = ventas.Sum(v => v.CantidadBoletos);
+                decimal totalRecaudado = ventas.Sum(v => v.TotalCobrado);
+
+                return new EstadisticasEvento
+                {
+                    TotalBoletos = evento.TotalBoletos,
+                    BoletosDisponibles = evento.TotalBoletos - totalVendidos,
+                    BoletosVendidos = totalVendidos,
+                    TotalRecaudado = totalRecaudado,
+                    PrecioPorBoleto = evento.PrecioBoleto
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ReportesController] Error al obtener estadísticas: {ex.Message}");
+                return new EstadisticasEvento();
             }
         }
 
@@ -158,6 +207,7 @@ namespace AppEstadios.Controllers
     /// </summary>
     public class PinEventoInfo
     {
+        public int    EventoId        { get; set; }
         public string NombreEstadio   { get; set; } = string.Empty;
         public string NombreLocal     { get; set; } = string.Empty;
         public string NombreVisitante { get; set; } = string.Empty;

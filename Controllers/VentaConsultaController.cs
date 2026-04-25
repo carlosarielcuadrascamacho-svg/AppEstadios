@@ -262,6 +262,8 @@ namespace AppEstadios.Controllers
         public int     TotalBoletos       { get; set; }
         /// <summary>Boletos que aún se pueden vender.</summary>
         public int     BoletosDisponibles { get; set; }
+        /// <summary>Total de boletos vendidos.</summary>
+        public int     BoletosVendidos    { get; set; }
         /// <summary>Suma de todas las ventas registradas.</summary>
         public decimal TotalRecaudado     { get; set; }
         /// <summary>Precio unitario por boleto.</summary>

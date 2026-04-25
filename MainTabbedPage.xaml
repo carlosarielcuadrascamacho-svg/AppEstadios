@@ -2,25 +2,41 @@
 <TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
             xmlns:views="clr-namespace:AppEstadios.Views"
+            xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
             x:Class="AppEstadios.MainTabbedPage"
-            BarBackgroundColor="{StaticResource Secundario}"
-            BarTextColor="{StaticResource TextoSecundario}"
-            SelectedTabColor="{StaticResource Primario}"
-            UnselectedTabColor="{StaticResource TextoTerciario}">
+            android:TabbedPage.ToolbarPlacement="Bottom"
+            android:TabbedPage.IsSwipePagingEnabled="True"
 
-    <NavigationPage Title="Registro" IconImageSource="tab_registro.png">
+            BarBackgroundColor="#121212"
+            BarTextColor="#888888"
+            SelectedTabColor="#FFFFFF"
+            UnselectedTabColor="#666666">
+
+    <!-- REGISTRO -->
+    <NavigationPage Title="Registro">
+        <NavigationPage.IconImageSource>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="app_registration" Size="26" />
+        </NavigationPage.IconImageSource>
         <x:Arguments>
             <views:RegistroEventoView />
         </x:Arguments>
     </NavigationPage>
 
-    <NavigationPage Title="Ventas" IconImageSource="tab_ventas.png">
+    <!-- VENTAS -->
+    <NavigationPage Title="Ventas">
+        <NavigationPage.IconImageSource>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="receipt_long" Size="26" />
+        </NavigationPage.IconImageSource>
         <x:Arguments>
             <views:VentaConsultaView />
         </x:Arguments>
     </NavigationPage>
 
-    <NavigationPage Title="Reportes" IconImageSource="tab_reportes.png">
+    <!-- REPORTES -->
+    <NavigationPage Title="Mapa">
+        <NavigationPage.IconImageSource>
+            <FontImageSource FontFamily="MaterialSymbols" Glyph="map" Size="26" />
+        </NavigationPage.IconImageSource>
         <x:Arguments>
             <views:ReportesView />
         </x:Arguments>

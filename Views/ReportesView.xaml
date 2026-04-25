@@ -1,223 +1,264 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:maps="clr-namespace:Syncfusion.Maui.Maps;assembly=Syncfusion.Maui.Maps"
+             xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
              x:Class="AppEstadios.Views.ReportesView"
-             Title="Mapa"
-             Shell.NavBarIsVisible="False">
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource Fondo}">
 
-    <!--
-        CAPAS (z-order de abajo hacia arriba):
-          1. SfMaps de Syncfusion — full screen con OpenStreetMap
-          2. Header flotante semitransparente (esquina superior)
-          3. Overlay de carga
-          4. Overlay de estado vacío
-          5. Bottom Sheet (tarjeta inferior al tocar un pin)
-    -->
     <Grid>
 
-        <!-- ══════════════════════════════════════════════════
-             CAPA 1 — MAPA FULL SCREEN (OpenStreetMap, sin API key)
-        ══════════════════════════════════════════════════ -->
-        <maps:SfMaps x:Name="mapaEventos"
-                     HorizontalOptions="Fill"
-                     VerticalOptions="Fill">
-            <maps:SfMaps.Layer>
-                <maps:MapTileLayer x:Name="capaMapa"
-                                   UrlTemplate="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                   ZoomLevel="5"
-                                   MarkerSelected="OnMarkerClicked">
+        <maps:Map x:Name="mapaEventos"
+                  HorizontalOptions="Fill"
+                  VerticalOptions="Fill"
+                  IsShowingUser="False"
+                  MapClicked="OnMapClicked"/>
 
-                    <!-- Comportamiento de zoom y paneo -->
-                    <maps:MapTileLayer.ZoomPanBehavior>
-                        <maps:MapZoomPanBehavior EnableZooming="True"
-                                                 EnablePanning="True"
-                                                 ZoomLevel="5"/>
-                    </maps:MapTileLayer.ZoomPanBehavior>
-
-                    <!-- Colección de marcadores (se llena desde el code-behind) -->
-                    <maps:MapTileLayer.Markers>
-                        <maps:MapMarkerCollection x:Name="coleccionMarcadores"/>
-                    </maps:MapTileLayer.Markers>
-
-                    <!-- Template visual del marcador: emoji de estadio + nombre -->
-                    <maps:MapTileLayer.MarkerTemplate>
-                        <DataTemplate>
-                            <VerticalStackLayout HorizontalOptions="Center"
-                                                 Spacing="0">
-                                <!-- Pin emoji grande -->
-                                <Label Text="🏟️" FontSize="28"
-                                       HorizontalOptions="Center"
-                                       Margin="0,0,0,-4"/>
-                                <!-- Etiqueta con nombre del estadio -->
-                                <Border BackgroundColor="#DD1E3A5F"
-                                        StrokeShape="RoundRectangle 6"
-                                        Stroke="#3B82F6" StrokeThickness="1"
-                                        Padding="6,3"
-                                        HorizontalOptions="Center">
-                                    <Label Text="{Binding Label}"
-                                           FontSize="9" FontAttributes="Bold"
-                                           TextColor="White"
-                                           HorizontalOptions="Center"
-                                           MaxLines="1"
-                                           LineBreakMode="TailTruncation"/>
-                                </Border>
-                            </VerticalStackLayout>
-                        </DataTemplate>
-                    </maps:MapTileLayer.MarkerTemplate>
-
-                </maps:MapTileLayer>
-            </maps:SfMaps.Layer>
-        </maps:SfMaps>
-
-        <!-- ══════════════════════════════════════════════════
-             CAPA 2 — HEADER FLOTANTE (esquina superior)
-        ══════════════════════════════════════════════════ -->
-        <Border HorizontalOptions="Start"
+        <!-- 🔥 HEADER FLOTANTE -->
+        <Border x:Name="headerOverlay"
+                HorizontalOptions="Fill"
                 VerticalOptions="Start"
-                Margin="16,52,0,0"
+                Margin="16,50,16,0"
                 StrokeShape="RoundRectangle 20"
-                Stroke="#1E3A5F" StrokeThickness="1"
-                BackgroundColor="#CC0F172A"
-                Padding="14,10">
-            <HorizontalStackLayout Spacing="10">
-                <Border BackgroundColor="#1E3A5F" StrokeShape="RoundRectangle 8"
-                        WidthRequest="32" HeightRequest="32" Stroke="Transparent">
-                    <Label Text="🗺️" FontSize="15"
-                           HorizontalOptions="Center" VerticalOptions="Center"/>
-                </Border>
-                <VerticalStackLayout VerticalOptions="Center" Spacing="1">
-                    <Label Text="EVENTOS PRÓXIMOS" FontSize="10" FontAttributes="Bold"
-                           TextColor="#3B82F6"/>
-                    <Label x:Name="lblContadorPines" Text="Cargando..."
-                           FontSize="11" TextColor="#94A3B8"/>
+                BackgroundColor="#CC121212"
+                Padding="14,10"
+                Stroke="#22FFFFFF">
+
+            <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+
+                <Label Text="location_on" FontFamily="MaterialSymbols" FontSize="18"
+                       VerticalOptions="Center"/>
+
+                <VerticalStackLayout Grid.Column="1" Spacing="0" Margin="8,0">
+                    <Label Text="Eventos cercanos"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource BlancoPuro}"/>
+                    <Label x:Name="lblContadorPines"
+                           Text="Cargando..."
+                           FontSize="11"
+                           TextColor="{StaticResource TextoTerciario}"/>
                 </VerticalStackLayout>
-            </HorizontalStackLayout>
-        </Border>
 
-        <!-- ══════════════════════════════════════════════════
-             CAPA 3 — OVERLAY DE CARGA
-        ══════════════════════════════════════════════════ -->
-        <Grid x:Name="overlayLoading"
-              HorizontalOptions="Center" VerticalOptions="Center"
-              IsVisible="True">
-            <Border StrokeShape="RoundRectangle 20"
-                    Stroke="#1E3A5F" StrokeThickness="1"
-                    BackgroundColor="#EE0F172A" Padding="28,20">
-                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                    <ActivityIndicator IsRunning="True" Color="#3B82F6"
-                                       WidthRequest="40" HeightRequest="40"/>
-                    <Label Text="Cargando eventos próximos..."
-                           FontSize="13" FontAttributes="Bold"
-                           TextColor="#94A3B8" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-            </Border>
-        </Grid>
-
-        <!-- ══════════════════════════════════════════════════
-             CAPA 4 — ESTADO VACÍO
-        ══════════════════════════════════════════════════ -->
-        <Grid x:Name="overlayVacio"
-              HorizontalOptions="Center" VerticalOptions="Center"
-              IsVisible="False">
-            <Border StrokeShape="RoundRectangle 24"
-                    Stroke="#2D1B69" StrokeThickness="1"
-                    BackgroundColor="#EE0F172A" Padding="32,24">
-                <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
-                    <Label Text="📭" FontSize="52" HorizontalOptions="Center"/>
-                    <Label Text="Sin eventos próximos" FontSize="16" FontAttributes="Bold"
-                           TextColor="#E2E8F0" HorizontalOptions="Center"/>
-                    <Label Text="No hay partidos programados en el futuro.&#10;Crea uno desde la pestaña Registro."
-                           FontSize="12" TextColor="#94A3B8"
-                           HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
-                </VerticalStackLayout>
-            </Border>
-        </Grid>
-
-        <!-- ══════════════════════════════════════════════════
-             CAPA 5 — BOTTOM SHEET (al tocar un pin)
-        ══════════════════════════════════════════════════ -->
-        <Border x:Name="bottomSheet"
-                VerticalOptions="End" HorizontalOptions="Fill"
-                Margin="14,0,14,28"
-                StrokeShape="RoundRectangle 28"
-                Stroke="#1E3A5F" StrokeThickness="1.5"
-                BackgroundColor="#F00F172A"
-                IsVisible="False">
-
-            <Grid RowDefinitions="Auto,Auto,Auto" Padding="20,18,20,20" RowSpacing="0">
-
-                <!-- Handle visual -->
-                <BoxView Grid.Row="0"
-                         WidthRequest="40" HeightRequest="4"
-                         Color="#334155" CornerRadius="2"
-                         HorizontalOptions="Center" Margin="0,0,0,16"/>
-
-                <!-- Ícono + Nombre estadio + Badge -->
-                <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto"
-                      ColumnSpacing="14" Margin="0,0,0,14">
-                    <Border Grid.Column="0"
-                            WidthRequest="56" HeightRequest="56"
-                            StrokeShape="RoundRectangle 16"
-                            BackgroundColor="#1E3A5F"
-                            Stroke="#3B82F6" StrokeThickness="1.5">
-                        <Label Text="🏟️" FontSize="26"
-                               HorizontalOptions="Center" VerticalOptions="Center"/>
-                    </Border>
-                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
-                        <Label x:Name="lblCardEstadio" Text="—"
-                               FontSize="16" FontAttributes="Bold" TextColor="#F1F5F9"
-                               LineBreakMode="TailTruncation"/>
-                        <Label x:Name="lblCardPartido" Text="—"
-                               FontSize="13" TextColor="#94A3B8"
-                               LineBreakMode="TailTruncation"/>
-                    </VerticalStackLayout>
-                    <Border Grid.Column="2"
-                            StrokeShape="RoundRectangle 10"
-                            BackgroundColor="#1E3A5F" Stroke="#3B82F6" StrokeThickness="1"
-                            Padding="8,4" VerticalOptions="Start">
-                        <Label Text="PRÓXIMO" FontSize="9" FontAttributes="Bold"
-                               TextColor="#3B82F6"/>
-                    </Border>
-                </Grid>
-
-                <!-- Fecha + Hora -->
-                <Grid Grid.Row="2" ColumnDefinitions="*,16,*" ColumnSpacing="0">
-                    <Border Grid.Column="0"
-                            StrokeShape="RoundRectangle 14"
-                            Stroke="#1E293B" StrokeThickness="1"
-                            BackgroundColor="#1E293B" Padding="12,10">
-                        <HorizontalStackLayout Spacing="8">
-                            <Label Text="📅" FontSize="16" VerticalOptions="Center"/>
-                            <Label x:Name="lblCardFecha" Text="—"
-                                   FontSize="12" FontAttributes="Bold"
-                                   TextColor="#CBD5E1" VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                    </Border>
-                    <Border Grid.Column="2"
-                            StrokeShape="RoundRectangle 14"
-                            Stroke="#1E3A5F" StrokeThickness="1"
-                            BackgroundColor="#1E3A5F" Padding="12,10">
-                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
-                            <Label Text="⏰" FontSize="16" VerticalOptions="Center"/>
-                            <Label x:Name="lblCardHora" Text="—"
-                                   FontSize="14" FontAttributes="Bold"
-                                   TextColor="#3B82F6" VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                    </Border>
-                </Grid>
+                <!-- posible futuro botón -->
+                <Label Grid.Column="2"
+                       Text="⋯"
+                       FontSize="20"
+                       TextColor="{StaticResource TextoSecundario}"
+                       VerticalOptions="Center"/>
 
             </Grid>
         </Border>
 
-        <!-- Área transparente para cerrar la bottom sheet al tocar el mapa -->
-        <Grid x:Name="tapCerrarSheet"
-              HorizontalOptions="Fill" VerticalOptions="Fill"
-              IsVisible="False" BackgroundColor="Transparent">
+        <!-- 🔥 MODO RUTA TOOLBAR -->
+        <Border x:Name="toolbarRuta"
+                HorizontalOptions="Fill"
+                VerticalOptions="Start"
+                Margin="16,50,16,0"
+                StrokeShape="RoundRectangle 20"
+                BackgroundColor="#1A237E"
+                Padding="14,12"
+                IsVisible="False"
+                Stroke="#3F51B5">
+            <Grid ColumnDefinitions="*, Auto, Auto" VerticalOptions="Center" ColumnSpacing="10">
+                <VerticalStackLayout VerticalOptions="Center" Spacing="1">
+                    <Label Text="Modo Ruta activo"
+                           FontSize="11"
+                           TextColor="#90CAF9"
+                           FontAttributes="Bold"/>
+                    <Label Text="Toca el mapa para colocar tu origen"
+                           FontSize="12"
+                           TextColor="#FFFFFF"
+                           VerticalOptions="Center"/>
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="Cancelar"
+                        BackgroundColor="#283593" TextColor="#90CAF9"
+                        Padding="12,0" HeightRequest="36" CornerRadius="8"
+                        FontSize="13" Clicked="OnCancelarRutaClicked" />
+                <Button x:Name="btnConfirmarRuta" Grid.Column="2" Text="Confirmar"
+                        BackgroundColor="#E3F2FD" TextColor="#1A237E"
+                        FontAttributes="Bold" Padding="15,0" HeightRequest="36" CornerRadius="8"
+                        FontSize="13" Clicked="OnConfirmarRutaClicked" IsEnabled="False" />
+            </Grid>
+        </Border>
+
+        <!-- 🔥 LOADING OVERLAY (más ligero) -->
+        <Grid x:Name="overlayLoading"
+              BackgroundColor="#66000000"
+              IsVisible="True">
+
+            <VerticalStackLayout HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="14">
+
+                <ActivityIndicator IsRunning="True"
+                                   WidthRequest="42"
+                                   HeightRequest="42"
+                                   Color="{StaticResource BlancoPuro}"/>
+
+                <Label x:Name="lblLoadingTexto"
+                       Text="Cargando eventos..."
+                       FontSize="13"
+                       TextColor="{StaticResource TextoPrincipal}"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- 🔥 EMPTY STATE -->
+        <Grid x:Name="overlayVacio"
+              BackgroundColor="#AA000000"
+              IsVisible="False">
+
+            <VerticalStackLayout HorizontalOptions="Center"
+                                 VerticalOptions="Center"
+                                 Spacing="14"
+                                 Padding="30">
+
+                <Label Text="explore" FontFamily="MaterialSymbols"
+                       FontSize="54"
+                       HorizontalOptions="Center"
+                       Opacity="0.85"/>
+
+                <Label Text="Sin eventos"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextoPrincipal}"
+                       HorizontalOptions="Center"/>
+
+                <Label Text="Cuando crees eventos, aparecerán aquí en el mapa."
+                       FontSize="13"
+                       TextColor="{StaticResource TextoSecundario}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"/>
+
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- 🔥 FONDO INTERACTIVO -->
+        <Grid x:Name="fondoOscuro"
+              BackgroundColor="#99000000"
+              IsVisible="False">
+
             <Grid.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnMapaTapped"/>
             </Grid.GestureRecognizers>
         </Grid>
+
+        <!-- 🔥 BOTTOM SHEET MODERNO -->
+        <Border x:Name="bottomSheet"
+                VerticalOptions="End"
+                Margin="16,0,16,24"
+                StrokeShape="RoundRectangle 28"
+                BackgroundColor="#E6121212"
+                Stroke="#22FFFFFF"
+                IsVisible="False">
+
+            <Grid Padding="20,14,20,20"
+                  RowDefinitions="Auto,Auto,Auto,Auto">
+
+                <!-- handle -->
+                <BoxView HeightRequest="5"
+                         WidthRequest="50"
+                         Color="#555"
+                         CornerRadius="3"
+                         HorizontalOptions="Center"
+                         Margin="0,0,0,16"/>
+
+                <!-- info principal -->
+                <Grid Grid.Row="1"
+                      ColumnDefinitions="Auto,*,Auto"
+                      ColumnSpacing="14">
+
+                    <Border WidthRequest="56"
+                            HeightRequest="56"
+                            StrokeShape="RoundRectangle 16"
+                            BackgroundColor="{StaticResource Superficie}">
+
+                        <Label Text="stadium" FontFamily="MaterialSymbols"
+                               FontSize="26"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+
+                    <VerticalStackLayout Grid.Column="1"
+                                         Spacing="2"
+                                         VerticalOptions="Center">
+
+                        <Label x:Name="lblCardEstadio"
+                               Text="—"
+                               FontSize="17"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextoPrincipal}"/>
+
+                        <Label x:Name="lblCardPartido"
+                               Text="—"
+                               FontSize="13"
+                               TextColor="{StaticResource TextoSecundario}"/>
+                    </VerticalStackLayout>
+
+                    <Border Grid.Column="2"
+                            BackgroundColor="{StaticResource BlancoPuro}"
+                            Padding="8,4"
+                            StrokeShape="RoundRectangle 10"
+                            VerticalOptions="Start">
+
+                        <Label Text="EN VIVO"
+                               FontSize="9"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Black}"/>
+                    </Border>
+
+                </Grid>
+
+                <!-- detalles y estadísticas -->
+                <Grid Grid.Row="2"
+                      RowDefinitions="Auto, Auto"
+                      ColumnDefinitions="*,*"
+                      RowSpacing="15"
+                      ColumnSpacing="10"
+                      Margin="0,18,0,0">
+
+                    <!-- Fecha -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Fecha" FontSize="10" TextColor="{StaticResource TextoTerciario}"/>
+                        <Label x:Name="lblCardFecha" Text="—" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Hora -->
+                    <VerticalStackLayout Grid.Column="1" Spacing="4">
+                        <Label Text="Hora" FontSize="10" TextColor="{StaticResource TextoTerciario}"/>
+                        <Label x:Name="lblCardHora" Text="—" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource TextoPrincipal}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Boletos -->
+                    <VerticalStackLayout Grid.Row="1" Spacing="4">
+                        <Label Text="Boletos Vendidos" FontSize="10" TextColor="{StaticResource TextoTerciario}"/>
+                        <Label x:Name="lblCardBoletos" Text="..." FontSize="14" FontAttributes="Bold" TextColor="{StaticResource Primario}"/>
+                    </VerticalStackLayout>
+
+                    <!-- Recaudado -->
+                    <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="4">
+                        <Label Text="Recaudado" FontSize="10" TextColor="{StaticResource TextoTerciario}"/>
+                        <Label x:Name="lblCardRecaudado" Text="..." FontSize="14" FontAttributes="Bold" TextColor="#4CAF50"/>
+                    </VerticalStackLayout>
+
+                </Grid>
+
+                <!-- botón cómo llegar -->
+                <Button Grid.Row="3"
+                        x:Name="btnComoLlegar"
+                        Text="Cómo llegar"
+                        ImageSource="{FontImage FontFamily=MaterialSymbols, Glyph=route, Size=20, Color=#000000}"
+                        BackgroundColor="{StaticResource BlancoPuro}"
+                        TextColor="{StaticResource Fondo}"
+                        FontAttributes="Bold"
+                        CornerRadius="14"
+                        HeightRequest="48"
+                        Margin="0,20,0,0"
+                        Clicked="OnComoLlegarClicked" />
+
+            </Grid>
+        </Border>
 
     </Grid>
 </ContentPage>

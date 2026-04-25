@@ -5,251 +5,203 @@
              BackgroundColor="{StaticResource Fondo}"
              Title="Nuevo Evento">
 
-    <ScrollView>
-        <VerticalStackLayout Spacing="0">
+    <Grid RowDefinitions="Auto,*">
 
-            <!-- ══════════ HEADER HERO ══════════ -->
-            <Grid HeightRequest="180">
-                <!-- Fondo de gradiente simulado con capas -->
-                <BoxView Color="#0F172A" HorizontalOptions="Fill" VerticalOptions="Fill"/>
-                <BoxView Color="#1E3A5F" Opacity="0.5" HorizontalOptions="Fill" VerticalOptions="Fill"/>
+        <!-- 🔥 HEADER HERO -->
+        <Grid x:Name="HeaderSection" HeightRequest="220" Padding="24,50,24,20">
+            <Ellipse Fill="{StaticResource GradienteInicio}" Opacity="0.2"
+                     WidthRequest="350" HeightRequest="350"
+                     HorizontalOptions="End" VerticalOptions="Start"
+                     Margin="0,-120,-120,0"/>
 
-                <!-- Círculos decorativos de fondo -->
-                <Ellipse Fill="#3B82F6" Opacity="0.08" WidthRequest="220" HeightRequest="220"
-                         HorizontalOptions="End" VerticalOptions="Start"
-                         Margin="0,-60,-60,0"/>
-                <Ellipse Fill="#8B5CF6" Opacity="0.08" WidthRequest="160" HeightRequest="160"
-                         HorizontalOptions="Start" VerticalOptions="End"
-                         Margin="-40,0,0,30"/>
+            <VerticalStackLayout Spacing="6">
+                <Label Text="CREAR EVENTO"
+                       FontSize="12"
+                       CharacterSpacing="2"
+                       TextColor="{StaticResource TextoSecundario}"/>
 
-                <!-- Contenido del header -->
-                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Start"
-                                     Padding="24,0,0,0" Spacing="6">
-                    <!-- Icono + badge -->
-                    <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                        <Border BackgroundColor="#3B82F6" StrokeShape="RoundRectangle 12"
-                                WidthRequest="46" HeightRequest="46" Stroke="Transparent">
-                            <Label Text="🏟️" FontSize="22"
-                                   HorizontalOptions="Center" VerticalOptions="Center"/>
-                        </Border>
-                        <Border BackgroundColor="#1E3A5F" StrokeShape="RoundRectangle 20"
-                                Stroke="#3B82F6" StrokeThickness="1"
-                                Padding="10,4">
-                            <Label Text="NUEVO PARTIDO" FontSize="11" FontAttributes="Bold"
-                                   TextColor="#3B82F6"/>
-                        </Border>
-                    </HorizontalStackLayout>
+                <Label Text="Nuevo Partido"
+                       FontSize="34"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextoPrincipal}"/>
 
-                    <Label Text="Programar" FontSize="28" FontAttributes="Bold"
+                <Label Text="Configura los detalles del encuentro"
+                       FontSize="14"
+                       TextColor="{StaticResource TextoTerciario}"/>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- 🔥 CONTENIDO -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,10,24,40" Spacing="28">
+
+                <!-- 🏟️ MATCHUP (PROTAGONISTA) -->
+                <Border x:Name="MatchupSection" StrokeShape="RoundRectangle 28"
+                        BackgroundColor="{StaticResource Card}"
+                        Padding="20">
+
+                    <Grid ColumnDefinitions="*,Auto,*" VerticalOptions="Center">
+
+                        <!-- LOCAL -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="LOCAL"
+                                   FontSize="11"
+                                   TextColor="{StaticResource TextoSecundario}"/>
+
+                            <Picker x:Name="pickerLocal"
+                                    Title="Seleccionar"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource TextoPrincipal}"/>
+                        </VerticalStackLayout>
+
+                        <!-- VS -->
+                        <Label Grid.Column="1"
+                               Text="VS"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource TextoSecundario}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+
+                        <!-- VISITANTE -->
+                        <VerticalStackLayout Grid.Column="2" Spacing="6">
+                            <Label Text="VISITANTE"
+                                   FontSize="11"
+                                   TextColor="{StaticResource TextoSecundario}"/>
+
+                            <Picker x:Name="pickerVisitante"
+                                    Title="Seleccionar"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource TextoPrincipal}"/>
+                        </VerticalStackLayout>
+
+                    </Grid>
+                </Border>
+
+                <!-- 📍 INFO -->
+                <VerticalStackLayout x:Name="DetallesSection" Spacing="16">
+
+                    <Label Text="Detalles del Evento"
+                           FontSize="16"
+                           FontAttributes="Bold"
                            TextColor="{StaticResource TextoPrincipal}"/>
-                    <Label Text="Partido" FontSize="28" FontAttributes="Bold"
-                           TextColor="#3B82F6" Margin="0,-10,0,0"/>
+
+                    <!-- ESTADIO -->
+                    <Border StrokeShape="RoundRectangle 18"
+                            BackgroundColor="{StaticResource Card}"
+                            Padding="14">
+
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="ESTADIO"
+                                   FontSize="11"
+                                   TextColor="{StaticResource TextoSecundario}"/>
+
+                            <Picker x:Name="pickerEstadio"
+                                    Title="Seleccionar sede"
+                                    SelectedIndexChanged="OnEstadioSeleccionado"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource TextoPrincipal}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- FECHA + HORA -->
+                    <Grid ColumnDefinitions="*,12,*">
+
+                        <Border StrokeShape="RoundRectangle 18"
+                                BackgroundColor="{StaticResource Card}"
+                                Padding="14">
+
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="FECHA"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextoSecundario}"/>
+
+                                <DatePicker x:Name="fechaEvento"
+                                            MinimumDate="2026-01-01"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource TextoPrincipal}"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Column="2"
+                                StrokeShape="RoundRectangle 18"
+                                BackgroundColor="{StaticResource Card}"
+                                Padding="14">
+
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="HORA"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextoSecundario}"/>
+
+                                <TimePicker x:Name="horaEvento"
+                                            BackgroundColor="Transparent"
+                                            TextColor="{StaticResource TextoPrincipal}"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                    </Grid>
                 </VerticalStackLayout>
 
-                <!-- Decoración balón derecha -->
-                <Label Text="⚽" FontSize="70" Opacity="0.07"
-                       HorizontalOptions="End" VerticalOptions="Center"
-                       Margin="0,0,20,0"/>
-            </Grid>
+                <!-- 🎟️ BOLETOS -->
+                <VerticalStackLayout x:Name="BoletosSection" Spacing="16">
 
-            <!-- ══════════ CUERPO DEL FORMULARIO ══════════ -->
-            <VerticalStackLayout Padding="20,24,20,32" Spacing="18">
+                    <Label Text="Boletos"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextoPrincipal}"/>
 
-                <!-- ─── SECCIÓN: EQUIPOS ─── -->
-                <Border StrokeShape="RoundRectangle 20"
-                        Stroke="{StaticResource GrisBorde}"
-                        StrokeThickness="1"
-                        BackgroundColor="{StaticResource Card}"
-                        Padding="20">
-                    <VerticalStackLayout Spacing="14">
+                    <Grid ColumnDefinitions="*,12,*">
 
-                        <!-- Encabezado de sección -->
-                        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                            <Border BackgroundColor="#1E3A5F" StrokeShape="RoundRectangle 10"
-                                    WidthRequest="36" HeightRequest="36" Stroke="Transparent">
-                                <Label Text="👥" FontSize="17"
-                                       HorizontalOptions="Center" VerticalOptions="Center"/>
-                            </Border>
-                            <VerticalStackLayout VerticalOptions="Center" Spacing="1">
-                                <Label Text="EQUIPOS" FontSize="11" FontAttributes="Bold"
-                                       TextColor="{StaticResource Primario}"/>
-                                <Label Text="Selecciona los equipos participantes"
-                                       FontSize="12" TextColor="{StaticResource TextoSecundario}"/>
+                        <Border StrokeShape="RoundRectangle 18"
+                                BackgroundColor="{StaticResource Card}"
+                                Padding="14">
+
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="AFORO"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextoSecundario}"/>
+
+                                <Entry x:Name="txtTotalBoletos"
+                                       Placeholder="Ej. 5000"
+                                       Keyboard="Numeric"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{StaticResource TextoPrincipal}"/>
                             </VerticalStackLayout>
-                        </HorizontalStackLayout>
-
-                        <BoxView HeightRequest="1" Color="{StaticResource GrisBorde}" Margin="0,2"/>
-
-                        <!-- Label Equipo local -->
-                        <Label Text="Equipo Local" FontSize="13" FontAttributes="Bold"
-                               TextColor="{StaticResource TextoSecundario}" Margin="0,0,0,-8"/>
-                        <Border StrokeShape="RoundRectangle 12"
-                                Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                BackgroundColor="{StaticResource Superficie}"
-                                Padding="4,0">
-                            <Picker x:Name="pickerLocal" Title="Seleccionar equipo local"
-                                    TitleColor="{StaticResource TextoTerciario}"
-                                    TextColor="{StaticResource TextoPrincipal}"
-                                    BackgroundColor="Transparent"/>
                         </Border>
 
-                        <!-- Label Equipo visitante -->
-                        <Label Text="Equipo Visitante" FontSize="13" FontAttributes="Bold"
-                               TextColor="{StaticResource TextoSecundario}" Margin="0,0,0,-8"/>
-                        <Border StrokeShape="RoundRectangle 12"
-                                Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                BackgroundColor="{StaticResource Superficie}"
-                                Padding="4,0">
-                            <Picker x:Name="pickerVisitante" Title="Seleccionar equipo visitante"
-                                    TitleColor="{StaticResource TextoTerciario}"
-                                    TextColor="{StaticResource TextoPrincipal}"
-                                    BackgroundColor="Transparent"/>
+                        <Border Grid.Column="2"
+                                StrokeShape="RoundRectangle 18"
+                                BackgroundColor="{StaticResource Card}"
+                                Padding="14">
+
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="PRECIO"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextoSecundario}"/>
+
+                                <Entry x:Name="txtPrecio"
+                                       Placeholder="$0.00"
+                                       Keyboard="Numeric"
+                                       BackgroundColor="Transparent"
+                                       TextColor="{StaticResource TextoPrincipal}"/>
+                            </VerticalStackLayout>
                         </Border>
 
-                    </VerticalStackLayout>
-                </Border>
+                    </Grid>
+                </VerticalStackLayout>
 
-                <!-- ─── SECCIÓN: DETALLES DE VENTA ─── -->
-                <Border StrokeShape="RoundRectangle 20"
-                        Stroke="{StaticResource GrisBorde}"
-                        StrokeThickness="1"
-                        BackgroundColor="{StaticResource Card}"
-                        Padding="20">
-                    <VerticalStackLayout Spacing="14">
-
-                        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                            <Border BackgroundColor="#064E3B" StrokeShape="RoundRectangle 10"
-                                    WidthRequest="36" HeightRequest="36" Stroke="Transparent">
-                                <Label Text="🎟️" FontSize="17"
-                                       HorizontalOptions="Center" VerticalOptions="Center"/>
-                            </Border>
-                            <VerticalStackLayout VerticalOptions="Center" Spacing="1">
-                                <Label Text="BOLETOS Y PRECIO" FontSize="11" FontAttributes="Bold"
-                                       TextColor="{StaticResource Exito}"/>
-                                <Label Text="Define la capacidad y costo"
-                                       FontSize="12" TextColor="{StaticResource TextoSecundario}"/>
-                            </VerticalStackLayout>
-                        </HorizontalStackLayout>
-
-                        <BoxView HeightRequest="1" Color="{StaticResource GrisBorde}" Margin="0,2"/>
-
-                        <!-- Dos campos en grid -->
-                        <Grid ColumnDefinitions="*,12,*" ColumnSpacing="0">
-                            <VerticalStackLayout Grid.Column="0" Spacing="6">
-                                <Label Text="Total de Boletos" FontSize="13" FontAttributes="Bold"
-                                       TextColor="{StaticResource TextoSecundario}"/>
-                                <Border StrokeShape="RoundRectangle 12"
-                                        Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                        BackgroundColor="{StaticResource Superficie}"
-                                        Padding="4,0">
-                                    <Entry x:Name="txtTotalBoletos" Placeholder="0"
-                                           Keyboard="Numeric" BackgroundColor="Transparent"
-                                           TextColor="{StaticResource TextoPrincipal}"
-                                           PlaceholderColor="{StaticResource TextoTerciario}"/>
-                                </Border>
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="2" Spacing="6">
-                                <Label Text="Precio Unitario" FontSize="13" FontAttributes="Bold"
-                                       TextColor="{StaticResource TextoSecundario}"/>
-                                <Border StrokeShape="RoundRectangle 12"
-                                        Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                        BackgroundColor="{StaticResource Superficie}"
-                                        Padding="4,0">
-                                    <Entry x:Name="txtPrecio" Placeholder="$0.00"
-                                           Keyboard="Numeric" BackgroundColor="Transparent"
-                                           TextColor="{StaticResource TextoPrincipal}"
-                                           PlaceholderColor="{StaticResource TextoTerciario}"/>
-                                </Border>
-                            </VerticalStackLayout>
-                        </Grid>
-
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- ─── SECCIÓN: UBICACIÓN Y FECHA ─── -->
-                <Border StrokeShape="RoundRectangle 20"
-                        Stroke="{StaticResource GrisBorde}"
-                        StrokeThickness="1"
-                        BackgroundColor="{StaticResource Card}"
-                        Padding="20">
-                    <VerticalStackLayout Spacing="14">
-
-                        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                            <Border BackgroundColor="#2D1B69" StrokeShape="RoundRectangle 10"
-                                    WidthRequest="36" HeightRequest="36" Stroke="Transparent">
-                                <Label Text="📍" FontSize="17"
-                                       HorizontalOptions="Center" VerticalOptions="Center"/>
-                            </Border>
-                            <VerticalStackLayout VerticalOptions="Center" Spacing="1">
-                                <Label Text="UBICACIÓN Y HORA" FontSize="11" FontAttributes="Bold"
-                                       TextColor="{StaticResource Acento}"/>
-                                <Label Text="Estadio, fecha y hora del partido"
-                                       FontSize="12" TextColor="{StaticResource TextoSecundario}"/>
-                            </VerticalStackLayout>
-                        </HorizontalStackLayout>
-
-                        <BoxView HeightRequest="1" Color="{StaticResource GrisBorde}" Margin="0,2"/>
-
-                        <Label Text="Estadio" FontSize="13" FontAttributes="Bold"
-                               TextColor="{StaticResource TextoSecundario}" Margin="0,0,0,-8"/>
-                        <Border StrokeShape="RoundRectangle 12"
-                                Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                BackgroundColor="{StaticResource Superficie}"
-                                Padding="4,0">
-                            <Picker x:Name="pickerEstadio" Title="Seleccionar estadio"
-                                    TitleColor="{StaticResource TextoTerciario}"
-                                    TextColor="{StaticResource TextoPrincipal}"
-                                    BackgroundColor="Transparent"/>
-                        </Border>
-
-                        <Grid ColumnDefinitions="*,12,*" ColumnSpacing="0">
-                            <VerticalStackLayout Grid.Column="0" Spacing="6">
-                                <Label Text="Fecha" FontSize="13" FontAttributes="Bold"
-                                       TextColor="{StaticResource TextoSecundario}"/>
-                                <Border StrokeShape="RoundRectangle 12"
-                                        Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                        BackgroundColor="{StaticResource Superficie}"
-                                        Padding="4,0">
-                                    <DatePicker x:Name="fechaEvento" MinimumDate="2026-01-01"
-                                                TextColor="{StaticResource TextoPrincipal}"
-                                                BackgroundColor="Transparent"/>
-                                </Border>
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="2" Spacing="6">
-                                <Label Text="Hora" FontSize="13" FontAttributes="Bold"
-                                       TextColor="{StaticResource TextoSecundario}"/>
-                                <Border StrokeShape="RoundRectangle 12"
-                                        Stroke="{StaticResource GrisBorde}" StrokeThickness="1"
-                                        BackgroundColor="{StaticResource Superficie}"
-                                        Padding="4,0">
-                                    <TimePicker x:Name="horaEvento"
-                                                TextColor="{StaticResource TextoPrincipal}"
-                                                BackgroundColor="Transparent"/>
-                                </Border>
-                            </VerticalStackLayout>
-                        </Grid>
-
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- ─── BOTÓN PRINCIPAL ─── -->
-                <Border StrokeShape="RoundRectangle 18"
-                        Stroke="#3B82F6"
-                        StrokeThickness="1"
-                        BackgroundColor="#1E3A5F"
-                        HeightRequest="58"
-                        Margin="0,6,0,0">
-                    <Button Text="⚽  REGISTRAR PARTIDO"
-                            BackgroundColor="Transparent"
-                            TextColor="{StaticResource BlancoPuro}"
-                            FontSize="15"
-                            FontAttributes="Bold"
-                            CornerRadius="18"
-                            HeightRequest="58"
-                            Clicked="OnRegistrarPartidoClicked"/>
-                </Border>
+                <!-- 🔥 CTA -->
+                <Button x:Name="btnGuardar"
+                        Text="Publicar Evento"
+                        HeightRequest="60"
+                        CornerRadius="18"
+                        FontAttributes="Bold"
+                        BackgroundColor="{StaticResource BlancoPuro}"
+                        TextColor="{StaticResource Black}"
+                        Clicked="OnRegistrarPartidoClicked"/>
 
             </VerticalStackLayout>
-        </VerticalStackLayout>
-    </ScrollView>
+        </ScrollView>
+
+    </Grid>
 </ContentPage>

@@ -2,69 +2,56 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- ═══════════════════════════════════════════════
-         PALETA PRINCIPAL - TEMA DEPORTIVO PREMIUM
-    ═══════════════════════════════════════════════ -->
+    <Color x:Key="Primario">#FFFFFF</Color>
 
-    <!-- Azul eléctrico deportivo -->
-    <Color x:Key="Primario">#3B82F6</Color>
-    <!-- Azul marino oscuro (nav/header) -->
-    <Color x:Key="Secundario">#0F172A</Color>
-    <!-- Fondo general oscuro suave -->
-    <Color x:Key="Fondo">#0A0F1E</Color>
-    <!-- Superficies de tarjetas -->
-    <Color x:Key="Superficie">#111827</Color>
-    <!-- Card ligeramente más claro -->
-    <Color x:Key="Card">#1C2333</Color>
-    <!-- Borde sutil -->
-    <Color x:Key="GrisBorde">#2D3748</Color>
+    <Color x:Key="Secundario">#121212</Color>
 
-    <!-- Blanco puro y variantes -->
+    <Color x:Key="Fondo">#000000</Color>
+
+    <Color x:Key="Superficie">#121212</Color>
+
+    <Color x:Key="Card">#1C1C1E</Color>
+
+    <Color x:Key="GrisBorde">#33FFFFFF</Color>
+
     <Color x:Key="BlancoPuro">#FFFFFF</Color>
-    <Color x:Key="BlancoSuave">#F1F5F9</Color> 
+    <Color x:Key="BlancoSuave">#F4F4F5</Color>
 
-    <!-- Textos -->
-    <Color x:Key="TextoPrincipal">#F8FAFC</Color>
-    <Color x:Key="TextoSecundario">#94A3B8</Color>
-    <Color x:Key="TextoTerciario">#64748B</Color>
+    <Color x:Key="TextoPrincipal">#FFFFFF</Color>
+    <Color x:Key="TextoSecundario">#A1A1AA</Color>
+    <Color x:Key="TextoTerciario">#71717A</Color>
 
-    <!-- Colores de acento -->
-    <Color x:Key="Exito">#10B981</Color>
-    <Color x:Key="ExitoOscuro">#064E3B</Color>
-    <Color x:Key="Peligro">#EF4444</Color>
-    <Color x:Key="PeligroOscuro">#7F1D1D</Color>
-    <Color x:Key="Advertencia">#F59E0B</Color>
-    <Color x:Key="Acento">#8B5CF6</Color>
+    <Color x:Key="Exito">#34C759</Color>
+    <Color x:Key="ExitoOscuro">#052E16</Color>
+    <Color x:Key="Peligro">#FF3B30</Color>
+    <Color x:Key="PeligroOscuro">#450A0A</Color>
+    <Color x:Key="Advertencia">#FFCC00</Color>
+    <Color x:Key="Acento">#D4D4D8</Color>
 
-    <!-- Gradiente primario (simulado con colores sólidos) -->
-    <Color x:Key="GradienteInicio">#3B82F6</Color>
-    <Color x:Key="GradienteFin">#8B5CF6</Color>
+    <Color x:Key="GradienteInicio">#27272A</Color>
+    <Color x:Key="GradienteFin">#09090B</Color>
 
-    <!-- ═══════════════════════════════════════════════
-         COLORES MAUI ESTÁNDAR (REQUERIDOS POR STYLES.XAML)
-    ═══════════════════════════════════════════════ -->
-    <Color x:Key="Primary">#3B82F6</Color>
-    <Color x:Key="Secondary">#8B5CF6</Color>
-    <Color x:Key="Tertiary">#0F172A</Color>
+    <Color x:Key="Primary">#FFFFFF</Color>
+    <Color x:Key="Secondary">#121212</Color>
+    <Color x:Key="Tertiary">#1C1C1E</Color>
 
     <Color x:Key="White">#FFFFFF</Color>
     <Color x:Key="Black">#000000</Color>
-    <Color x:Key="OffBlack">#0A0F1E</Color>
+    <Color x:Key="OffBlack">#09090B</Color>
 
-    <Color x:Key="PrimaryDark">#1D4ED8</Color>
-    <Color x:Key="PrimaryDarkText">#BFDBFE</Color>
-    <Color x:Key="SecondaryDarkText">#E2E8F0</Color>
+    <Color x:Key="PrimaryDark">#D4D4D8</Color>
+    <Color x:Key="PrimaryDarkText">#000000</Color>
+    <Color x:Key="SecondaryDarkText">#A1A1AA</Color>
 
-    <Color x:Key="Magenta">#8B5CF6</Color>
-    <Color x:Key="MidnightBlue">#0F172A</Color>
+    <Color x:Key="Magenta">#FFFFFF</Color>
+    <Color x:Key="MidnightBlue">#000000</Color>
 
-    <Color x:Key="Gray100">#F1F5F9</Color>
-    <Color x:Key="Gray200">#E2E8F0</Color>
-    <Color x:Key="Gray300">#CBD5E1</Color>
-    <Color x:Key="Gray400">#94A3B8</Color>
-    <Color x:Key="Gray500">#64748B</Color>
-    <Color x:Key="Gray600">#475569</Color>
-    <Color x:Key="Gray900">#0F172A</Color>
-    <Color x:Key="Gray950">#020617</Color>
-
+    <Color x:Key="Gray100">#F4F4F5</Color>
+    <Color x:Key="Gray200">#E4E4E7</Color>
+    <Color x:Key="Gray300">#D4D4D8</Color>
+    <Color x:Key="Gray400">#A1A1AA</Color>
+    <Color x:Key="Gray500">#71717A</Color>
+    <Color x:Key="Gray600">#52525B</Color>
+    <Color x:Key="Gray900">#18181B</Color>
+    <Color x:Key="Gray950">#09090B</Color>
 </ResourceDictionary>
