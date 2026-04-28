@@ -51,7 +51,8 @@
                             <Picker x:Name="pickerLocal"
                                     Title="Seleccionar"
                                     BackgroundColor="Transparent"
-                                    TextColor="{StaticResource TextoPrincipal}"/>
+                                    TextColor="{StaticResource TextoPrincipal}"
+                                    SelectedIndexChanged="OnEquipoLocalSeleccionado"/>
                         </VerticalStackLayout>
 
                         <!-- VS -->
@@ -70,7 +71,9 @@
                                    TextColor="{StaticResource TextoSecundario}"/>
 
                             <Picker x:Name="pickerVisitante"
-                                    Title="Seleccionar"
+                                    Title="Primero elige local"
+                                    IsEnabled="False"
+                                    Opacity="0.45"
                                     BackgroundColor="Transparent"
                                     TextColor="{StaticResource TextoPrincipal}"/>
                         </VerticalStackLayout>
@@ -180,7 +183,7 @@
                                        TextColor="{StaticResource TextoSecundario}"/>
 
                                 <Entry x:Name="txtPrecio"
-                                       Placeholder="$0.00"
+                                       Placeholder="Ej: 250.00"
                                        Keyboard="Numeric"
                                        BackgroundColor="Transparent"
                                        TextColor="{StaticResource TextoPrincipal}"/>

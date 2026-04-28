@@ -39,8 +39,9 @@
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="24,10,24,40" Spacing="28">
 
-                <!-- 📊 DASHBOARD -->
-                <Grid x:Name="DashboardSection" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="16">
+                    <!-- 📊 DASHBOARD -->
+                <Grid x:Name="DashboardSection" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="16" RowSpacing="16">
+
 
                     <Border BackgroundColor="{StaticResource Card}" Padding="18" StrokeShape="RoundRectangle 18">
                         <VerticalStackLayout>
@@ -92,11 +93,48 @@
 
                 </Grid>
 
-                <!-- 🔥 SEPARADOR -->
+                    <!-- 📈 BARRA DE PROGRESO DE VENTAS -->
+                    <Border Grid.Row="2" Grid.ColumnSpan="2" BackgroundColor="{StaticResource Card}" Padding="18" StrokeShape="RoundRectangle 18">
+                        <VerticalStackLayout Spacing="8">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="Boletos vendidos"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextoSecundario}"
+                                       VerticalOptions="Center"/>
+                                <Label x:Name="lblPorcentajeVenta"
+                                       Grid.Column="1"
+                                       Text="0%"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Exito}"
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                            <ProgressBar x:Name="progBoletos"
+                                         Progress="0"
+                                         ProgressColor="{StaticResource Exito}"
+                                         BackgroundColor="{StaticResource Superficie}"
+                                         HeightRequest="8"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+
                 <Label Text="Nueva Venta"
                        FontSize="14"
                        FontAttributes="Bold"
                        TextColor="{StaticResource TextoPrincipal}"/>
+
+                <!-- ⚠️ BANNER DE ESTADO (se muestra cuando la venta está bloqueada) -->
+                <Border x:Name="bannerEstado"
+                        IsVisible="False"
+                        BackgroundColor="#1A1A2E"
+                        StrokeShape="RoundRectangle 14"
+                        Padding="16,12">
+                    <Label x:Name="lblEstadoVenta"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="#F59E0B"
+                           HorizontalTextAlignment="Center"/>
+                </Border>
 
                 <!-- 🧾 FORM -->
                 <VerticalStackLayout x:Name="FormSection" Spacing="18">
@@ -110,22 +148,41 @@
                            Margin="0,0,0,0"/>
 
                     <Entry x:Name="txtTelefono"
-                           Placeholder="Teléfono (opcional)"
+                           Placeholder="Teléfono (10 dígitos)"
                            Keyboard="Telephone"
+                           MaxLength="10"
                            HeightRequest="55"
                            BackgroundColor="{StaticResource Card}"
                            TextColor="{StaticResource TextoPrincipal}"
-                           PlaceholderColor="{StaticResource TextoTerciario}"/>
+                           PlaceholderColor="{StaticResource TextoTerciario}"
+                           TextChanged="OnTelefonoTextChanged"/>
+
+                    <!-- 📱 CONTADOR DÍGITOS TELÉFONO -->
+                    <Label x:Name="lblContadorTelefono"
+                           Text="0 / 10 dígitos"
+                           FontSize="11"
+                           TextColor="{StaticResource TextoTerciario}"
+                           HorizontalOptions="End"
+                           Margin="0,-12,4,0"/>
+
 
                     <Grid ColumnDefinitions="*,12,*">
 
-                        <Entry x:Name="txtCantBoletos"
-                               Placeholder="Cantidad"
-                               Keyboard="Numeric"
-                               HeightRequest="55"
-                               BackgroundColor="{StaticResource Card}"
-                               TextColor="{StaticResource TextoPrincipal}"
-                               TextChanged="OnCantBoletosTextChanged"/>
+                        <VerticalStackLayout Spacing="4">
+                            <Entry x:Name="txtCantBoletos"
+                                   Placeholder="Cantidad"
+                                   Keyboard="Numeric"
+                                   HeightRequest="55"
+                                   BackgroundColor="{StaticResource Card}"
+                                   TextColor="{StaticResource TextoPrincipal}"
+                                   TextChanged="OnCantBoletosTextChanged"/>
+                            <!-- 🎫 HINT BOLETOS DISPONIBLES -->
+                            <Label x:Name="lblHintBoletos"
+                                   Text=""
+                                   FontSize="11"
+                                   TextColor="{StaticResource TextoTerciario}"
+                                   Margin="4,0,0,0"/>
+                        </VerticalStackLayout>
 
                         <Border Grid.Column="2"
                                 BackgroundColor="#052E16"
@@ -144,6 +201,7 @@
                     </Grid>
 
                 </VerticalStackLayout>
+
 
                 <!-- 🔥 BOTONES -->
                 <Grid x:Name="BotonesSection" ColumnDefinitions="*,12,*">
@@ -166,17 +224,6 @@
                             Clicked="OnGuardarVentaClicked"/>
 
                 </Grid>
-
-                <!-- ⚠️ ELIMINAR -->
-                <Button x:Name="btnEliminarContainer"
-                        Text="Eliminar Evento"
-                        BackgroundColor="#2A0808"
-                        TextColor="{StaticResource Peligro}"
-                        CornerRadius="14"
-                        HeightRequest="50"
-                        IsVisible="False"
-                        Clicked="OnEliminarEventoClicked"/>
-
             </VerticalStackLayout>
         </ScrollView>
     </Grid>
